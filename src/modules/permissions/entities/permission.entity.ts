@@ -1,6 +1,7 @@
+import { BaseEntity } from 'src/common/entities/base.entity';
 import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
 @Entity({ schema: 'auth', name: 'permissions' })
-export class PermissionEntity{
+export class Permission extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -28,5 +29,5 @@ export class PermissionEntity{
     nullable: false,
     default: true,
   })
-  active: boolean;
+  isActive: boolean;
 }

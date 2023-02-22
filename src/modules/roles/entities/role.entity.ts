@@ -1,13 +1,16 @@
+import { Permission } from 'src/modules/permissions/entities/permission.entity';
 import {
   BeforeInsert,
   BeforeUpdate,
   Column,
   Entity,
   Index,
+  JoinTable,
+  ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity({ schema: 'admin', name: 'roles' })
+@Entity({ schema: 'auth', name: 'roles' })
 export class Role {
   @PrimaryGeneratedColumn()
   id: number;
@@ -19,12 +22,26 @@ export class Role {
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ type: 'boolean', nullable: false })
-  active: boolean;
+  @Column({
+    name: 'active',
+    type: 'boolean',
+    nullable: false,
+    default: true,
+  })
+  isActive: boolean;
+
+  @ManyToMany(() => Permission, { cascade: true })
+  @JoinTable({
+    schema: 'auth',
+    name: 'roles_permissions',
+    joinColumn: { name: 'role_id', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'permission_id', referencedColumnName: 'id' },
+  })
+  permissions: Permission[];
 
   @BeforeInsert()
   setActive() {
-    this.active = true;
+    this.isActive = true;
   }
 
   @BeforeInsert()

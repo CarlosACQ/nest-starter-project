@@ -12,9 +12,11 @@ import { ApiProperty } from '@nestjs/swagger';
 
 import { UserStatus } from '../enums';
 import { Role } from 'src/modules/roles/entities/role.entity';
+import { BaseEntity } from 'src/common/entities/base.entity';
+import { capitalizeFirstLetter, capitalizeFirstLetterAllWords } from '../../../common/utils';
 
-@Entity({ schema: 'admin', name: 'users' })
-export class User {
+@Entity({ schema: 'auth', name: 'users' })
+export class User extends BaseEntity {
   @ApiProperty({
     example: '123',
     description: 'User ID',
@@ -81,7 +83,7 @@ export class User {
     cascade: true,
   })
   @JoinTable({
-    schema: 'admin',
+    schema: 'auth',
     name: 'users_roles',
     joinColumn: {
       name: 'user_id',
@@ -93,6 +95,32 @@ export class User {
     },
   })
   roles: Role[];
+
+  @BeforeInsert()
+  nametoCamelCase() {
+    this.name = capitalizeFirstLetterAllWords(this.name);
+  }
+
+  @BeforeInsert()
+  firstLastnametoCamelCase() {
+    this.firstLastname = capitalizeFirstLetter(this.firstLastname);
+  }
+
+  @BeforeInsert()
+  secondLastnametoCamelCase() {
+    if (this.secondLastname)
+      this.secondLastname = capitalizeFirstLetter(this.secondLastname);
+  }
+
+  @BeforeInsert()
+  emailToLowerCase() {
+    this.email = this.email.toLowerCase();
+  }
+
+  @BeforeInsert()
+  setStatus() {
+    this.status = UserStatus.Active;
+  }
 
   @Expose()
   get fullname(): string {

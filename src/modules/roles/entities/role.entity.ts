@@ -1,3 +1,4 @@
+import { BaseEntity } from 'src/common/entities/base.entity';
 import { Permission } from 'src/modules/permissions/entities/permission.entity';
 import {
   BeforeInsert,
@@ -11,7 +12,7 @@ import {
 } from 'typeorm';
 
 @Entity({ schema: 'auth', name: 'roles' })
-export class Role {
+export class Role extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: number;
 

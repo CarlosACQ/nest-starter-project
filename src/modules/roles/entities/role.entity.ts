@@ -1,5 +1,6 @@
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { Permission } from 'src/modules/permissions/entities/permission.entity';
+import { User } from 'src/modules/users/entities/user.entity';
 import {
   BeforeInsert,
   BeforeUpdate,
@@ -30,6 +31,9 @@ export class Role extends BaseEntity {
     default: true,
   })
   isActive: boolean;
+
+  @ManyToMany(() => User, (user) => user.roles)
+  users: User[];
 
   @ManyToMany(() => Permission, { cascade: true })
   @JoinTable({

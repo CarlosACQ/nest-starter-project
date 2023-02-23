@@ -1,26 +1,65 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { Role } from './entities/role.entity';
 
 @Injectable()
 export class RolesService {
-  create(createRoleDto: CreateRoleDto) {
-    return 'This action adds a new role';
+
+  constructor(
+    @InjectRepository(Role)
+    private rolesRepository: Repository<Role>,
+  ) { }
+
+  async create(createRoleDto: CreateRoleDto) {
+    const { name, description, isActive } = createRoleDto;
+    const role = this.rolesRepository.create({
+      name,
+      description,
+      isActive,
+    });
+    return this.rolesRepository.save(role);
   }
 
-  findAll() {
-    return `This action returns all roles`;
+  async findAll() {
+    return this.rolesRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} role`;
+  async findOne(id: number) {
+    const role = await this.rolesRepository.findOne({ where: { id }, relations: ['permissions'] });
+    if (!role) {
+      throw new NotFoundException(`Role with id ${id} not found`);
+    }
+    return role;
   }
 
-  update(id: number, updateRoleDto: UpdateRoleDto) {
-    return `This action updates a #${id} role`;
+  async update(id: number, updateRoleDto: UpdateRoleDto) {
+    const role = await this.findOne(id);
+    const { name, description, isActive } = updateRoleDto;
+    role.name = name || role.name;
+    role.description = description || role.description;
+    role.isActive = isActive === undefined ? role.isActive : isActive;
+    return this.rolesRepository.save(role);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} role`;
+  async remove(id: number) {
+
+    const role = await this.rolesRepository.findOne({
+      where: { isActive: false, id }, 
+      relations: ['users'],
+    });
+
+    if (!role) {
+      throw new NotFoundException(`Role with id ${id} not found`);
+    }
+
+    if (role.users && role.users.length > 0) {
+      throw new BadRequestException(`Role with id ${id} has associated users`);
+    }
+
+    role.isActive = false;
+    return this.rolesRepository.save(role);
   }
 }

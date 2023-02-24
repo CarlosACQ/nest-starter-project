@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserExistsException } from 'src/common/http/exceptions';
 import { HashUtil } from 'src/common/utils/hash.util';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { Role } from '../roles/entities/role.entity';
 import { RolesService } from '../roles/roles.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -15,13 +15,11 @@ export class UsersService {
   constructor(
     @InjectRepository(User)
     private userRepository: Repository<User>,
-    @InjectRepository(Role)
-    private roleRepository: Repository<Role>,
     private rolesService: RolesService,
   ) {
   }
 
-  async create(createUserDto: CreateUserDto) {
+  public async create(createUserDto: CreateUserDto) {
     const { email } = createUserDto;
     const userExists = await this.getUserByEmail(email);
     if (userExists) {
@@ -29,7 +27,7 @@ export class UsersService {
     }
     const user = this.userRepository.create(createUserDto);
     if (createUserDto.rolesIds) {
-      const roles = await this.roleRepository.findByIds(createUserDto.rolesIds);
+      const roles = await this.rolesService.getRolesByIds(createUserDto.rolesIds);
       user.roles = roles;
     }
     user.password = await HashUtil.encrypt(user.password);

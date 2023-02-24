@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { Role } from './entities/role.entity';
@@ -47,7 +47,7 @@ export class RolesService {
   async remove(id: number) {
 
     const role = await this.rolesRepository.findOne({
-      where: { isActive: false, id }, 
+      where: { isActive: false, id },
       relations: ['users'],
     });
 
@@ -61,5 +61,9 @@ export class RolesService {
 
     role.isActive = false;
     return this.rolesRepository.save(role);
+  }
+
+  public async getRolesByIds(ids: number[]): Promise<Role[]> {
+    return this.rolesRepository.findBy({ id: In(ids) });
   }
 }

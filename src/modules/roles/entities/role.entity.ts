@@ -35,7 +35,7 @@ export class Role extends BaseEntity {
   @ManyToMany(() => User, (user) => user.roles)
   users: User[];
 
-  @ManyToMany(() => Permission, { cascade: true })
+  @ManyToMany(() => Permission, { nullable: true, cascade: true })
   @JoinTable({
     schema: 'auth',
     name: 'roles_permissions',

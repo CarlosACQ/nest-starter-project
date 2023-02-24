@@ -1,5 +1,5 @@
 import { capitalizeFirstLetter, capitalizeFirstLetterAllWords } from './string.util';
-import { HashHelper } from './hash.util';
+import { HashUtil } from './hash.util';
 
 
-export { capitalizeFirstLetter, capitalizeFirstLetterAllWords, HashHelper }
+export { capitalizeFirstLetter, capitalizeFirstLetterAllWords, HashUtil as HashHelper }

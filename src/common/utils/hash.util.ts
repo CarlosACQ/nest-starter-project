@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 
-export class HashHelper {
+export class HashUtil {
   private static salt = 10;
 
   /**

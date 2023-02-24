@@ -1,15 +1,19 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import {
+  ArrayNotEmpty,
   IsAlphanumeric,
+  IsArray,
   IsDate,
   IsEmail,
+  IsInt,
   IsNotEmpty,
   IsOptional,
   IsString,
   Length,
   MaxLength,
 } from 'class-validator';
+import { UserStatus } from '../enums/user-status.enum';
 
 export class CreateUserDto {
   @IsString()
@@ -52,4 +56,15 @@ export class CreateUserDto {
   @IsOptional()
   @ApiProperty()
   readonly birthdate: string;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty()
+  readonly status: UserStatus;
+
+  @ApiProperty({ example: [1, 2] })
+  @ArrayNotEmpty()
+  @IsArray()
+  @IsInt({ each: true })
+  rolesIds: number[];
 }

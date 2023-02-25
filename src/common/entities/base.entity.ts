@@ -2,7 +2,7 @@ import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, PrimaryGe
 import { Exclude } from 'class-transformer';
 
 @Entity()
-export class BaseEntity {
+export abstract class BaseEntity {
   @Exclude()
   @CreateDateColumn({
     name: 'created_at',

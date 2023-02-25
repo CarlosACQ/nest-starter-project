@@ -1,0 +1,1 @@
+export { IPermission } from './permission.interface';

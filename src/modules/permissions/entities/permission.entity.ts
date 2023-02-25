@@ -1,7 +1,8 @@
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
+import { IPermission } from '../interfaces';
 @Entity({ schema: 'auth', name: 'permissions' })
-export class Permission extends BaseEntity {
+export class Permission extends BaseEntity implements IPermission{
   @PrimaryGeneratedColumn()
   id: number;
 

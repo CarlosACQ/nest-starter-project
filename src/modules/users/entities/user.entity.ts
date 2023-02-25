@@ -9,20 +9,22 @@ import {
 } from 'typeorm';
 import { Exclude, Expose } from 'class-transformer';
 import { ApiProperty } from '@nestjs/swagger';
+import { v4 as uuidv4 } from 'uuid';
 
 import { UserStatus } from '../enums';
 import { Role } from 'src/modules/roles/entities/role.entity';
 import { BaseEntity } from 'src/common/entities/base.entity';
 import { capitalizeFirstLetter, capitalizeFirstLetterAllWords } from '../../../common/utils';
+import { IUser } from '../interfaces';
 
 @Entity({ schema: 'auth', name: 'users' })
-export class User extends BaseEntity {
+export class User extends BaseEntity implements IUser {
   @ApiProperty({
     example: '123',
     description: 'User ID',
     uniqueItems: true,
   })
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: number;
 
   @ApiProperty({

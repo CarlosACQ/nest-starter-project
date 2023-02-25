@@ -11,9 +11,10 @@ import {
   ManyToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { IRole } from '../interfaces';
 
 @Entity({ schema: 'auth', name: 'roles' })
-export class Role extends BaseEntity {
+export class Role extends BaseEntity implements IRole {
   @PrimaryGeneratedColumn()
   id: number;
 

@@ -2,6 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import * as morgan from 'morgan';
+import { CORS } from './constant';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +14,10 @@ async function bootstrap() {
       forbidNonWhitelisted: true,
     }),
   );
+
+  app.use(morgan('dev'));
+  app.enableCors(CORS);
+  app.setGlobalPrefix('api');
 
   const config = new DocumentBuilder()
     .setTitle('Initial Project')

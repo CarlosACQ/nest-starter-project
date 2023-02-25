@@ -1,7 +1,8 @@
 import { Module, Global } from '@nestjs/common';
 import { ConfigType } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions } from '@nestjs/typeorm';
-import {  DataSourceOptions } from 'typeorm';
+import { DataSourceOptions } from 'typeorm';
+import { SnakeNamingStrategy } from 'typeorm-naming-strategies';
 import { databaseConfig } from '../config';
 
 @Global()
@@ -20,6 +21,7 @@ import { databaseConfig } from '../config';
           database,
           autoLoadEntities: true,
           synchronize: false,
+          namingStrategy: new SnakeNamingStrategy(),
         } as DataSourceOptions;
       },
     }),

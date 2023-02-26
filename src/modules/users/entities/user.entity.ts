@@ -20,14 +20,6 @@ import { IUser } from '../interfaces';
 @Entity({ schema: 'auth', name: 'users' })
 export class User extends BaseEntity implements IUser {
   @ApiProperty({
-    example: '123',
-    description: 'User ID',
-    uniqueItems: true,
-  })
-  @PrimaryGeneratedColumn('uuid')
-  id: number;
-
-  @ApiProperty({
     example: 'carlos@gmail.com',
     description: 'email',
     uniqueItems: true,

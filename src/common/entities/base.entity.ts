@@ -1,8 +1,21 @@
-import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { v4 as uuidv4 } from 'uuid';
+import { BeforeInsert, BeforeUpdate, Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
+export interface IBaseEntity {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  createdBy: string;
+  updatedBy: string;
+}
+
 @Entity()
-export abstract class BaseEntity {
+export abstract class BaseEntity implements IBaseEntity {
+  @Exclude()
+  @PrimaryColumn({ type: 'uuid' })
+  id: string;
+
   @Exclude()
   @CreateDateColumn({
     name: 'created_at',
@@ -33,6 +46,7 @@ export abstract class BaseEntity {
 
   @BeforeInsert()
   setCreatedAndUpdatedBy() {
+    this.id = uuidv4(); // asigna un nuevo uuid al insertar una entidad
     this.createdBy = 'admin'; // Aquí puedes setear el usuario actualmente autenticado
     this.updatedBy = 'admin'; // Aquí puedes setear el usuario actualmente autenticado
   }

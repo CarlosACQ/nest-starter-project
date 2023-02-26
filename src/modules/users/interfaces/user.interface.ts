@@ -2,7 +2,6 @@ import { Role } from 'src/modules/roles/entities/role.entity';
 import { UserStatus } from '../enums';
 
 export interface IUser {
-  id: number;
   email: string;
   password: string;
   name: string;

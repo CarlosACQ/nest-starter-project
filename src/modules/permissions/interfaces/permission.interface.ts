@@ -1,5 +1,4 @@
 export interface IPermission {
-  id: number;
   slug: string;
   resource?: string;
   action?: string;

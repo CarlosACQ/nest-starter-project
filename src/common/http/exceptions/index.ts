@@ -6,8 +6,8 @@ import { InvalidCurrentPasswordException } from './invalid-current-password.exce
 import { InvalidTokenException } from './invalid-token.exception';
 import { PermissionExistsException } from './permission-exists.exception';
 import { RefreshTokenExpiredException } from './refresh-token-expired.exception';
-import { RoleExistsException } from './role-exists.exception';
 import { UserExistsException } from './user-exists.exception';
+import { RoleExistsException } from './role-exists.exception';
 
 export {
   ForeignKeyConflictException,

@@ -18,6 +18,7 @@ import { UserStatus } from '../enums/user-status.enum';
 export class CreateUserDto {
   @IsString()
   @IsEmail()
+  @IsNotEmpty()
   @ApiProperty({ description: "user's email", nullable: false })
   readonly email: string;
 

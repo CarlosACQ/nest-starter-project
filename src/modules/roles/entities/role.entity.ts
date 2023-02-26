@@ -15,9 +15,6 @@ import { IRole } from '../interfaces';
 
 @Entity({ schema: 'auth', name: 'roles' })
 export class Role extends BaseEntity implements IRole {
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Index()
   @Column({ type: 'varchar', length: 255, nullable: false, unique: true })
   name: string;

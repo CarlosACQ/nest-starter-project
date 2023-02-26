@@ -3,9 +3,6 @@ import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
 import { IPermission } from '../interfaces';
 @Entity({ schema: 'auth', name: 'permissions' })
 export class Permission extends BaseEntity implements IPermission{
-  @PrimaryGeneratedColumn()
-  id: number;
-
   @Index()
   @Column({ type: 'varchar', length: 60, nullable: false, unique: true })
   public slug: string;

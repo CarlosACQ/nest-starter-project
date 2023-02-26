@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserExistsException } from 'src/common/http/exceptions';
+import { In, Not, Repository } from  'typeorm';
+import { v4 as uuidv4 } from 'uuid';
 import { HashUtil } from 'src/common/utils/hash.util';
-import { In, Repository } from 'typeorm';
-import { Role } from '../roles/entities/role.entity';
 import { RolesService } from '../roles/roles.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -14,7 +14,7 @@ export class UsersService {
 
   constructor(
     @InjectRepository(User)
-    private userRepository: Repository<User>,
+    private readonly userRepository: Repository<User>,
     private rolesService: RolesService,
   ) {
   }
@@ -34,20 +34,41 @@ export class UsersService {
     return this.userRepository.save(user);
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    const users: User[] = await this.userRepository.find();
+    if (users.length === 0) throw new HttpException('No existen usuarios', HttpStatus.NOT_FOUND)
+    return users;
+
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: string) {
+    return this.userRepository.findOne({ where: { id }, relations: ['roles'] });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const userToUpdate = await this.userRepository.findOne({ where: { id } });
+
+    if (!userToUpdate) {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+    }
+
+    const { email } = updateUserDto;
+
+    if (email && email !== userToUpdate.email) {
+      const userWithEmail = await this.userRepository.findOne({ where: { email } });
+      if (userWithEmail) throw new UserExistsException(email)
+    }
+
+    const roles = updateUserDto.rolesIds ? await this.rolesService.getRolesByIds(updateUserDto.rolesIds) : null;
+
+    this.userRepository.merge(userToUpdate, { ...updateUserDto, roles });
+
+    return this.userRepository.save(userToUpdate);
+
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    await this.userRepository.delete(id);
   }
 
 

@@ -27,7 +27,7 @@ export class RolesService {
     return this.rolesRepository.find();
   }
 
-  async findOne(id: number) {
+  async findOne(id: string) {
     const role = await this.rolesRepository.findOne({ where: { id }, relations: ['permissions'] });
     if (!role) {
       throw new NotFoundException(`Role with id ${id} not found`);
@@ -35,7 +35,7 @@ export class RolesService {
     return role;
   }
 
-  async update(id: number, updateRoleDto: UpdateRoleDto) {
+  async update(id: string, updateRoleDto: UpdateRoleDto) {
     const role = await this.findOne(id);
     const { name, description, isActive } = updateRoleDto;
     role.name = name || role.name;
@@ -44,7 +44,7 @@ export class RolesService {
     return this.rolesRepository.save(role);
   }
 
-  async remove(id: number) {
+  async remove(id: string) {
 
     const role = await this.rolesRepository.findOne({
       where: { isActive: false, id },

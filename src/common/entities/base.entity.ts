@@ -47,12 +47,12 @@ export abstract class BaseEntity implements IBaseEntity {
   @BeforeInsert()
   setCreatedAndUpdatedBy() {
     this.id = uuidv4(); // asigna un nuevo uuid al insertar una entidad
-    this.createdBy = 'admin'; // Aquí puedes setear el usuario actualmente autenticado
-    this.updatedBy = 'admin'; // Aquí puedes setear el usuario actualmente autenticado
+    // this.createdBy = 'admin'; // Aquí puedes setear el usuario actualmente autenticado
+    // this.updatedBy = 'admin'; // Aquí puedes setear el usuario actualmente autenticado
   }
 
   @BeforeUpdate()
   setUpdatedBy() {
-    this.updatedBy = 'admin'; // Aquí puedes setear el usuario actualmente autenticado
+    // this.updatedBy = 'admin'; // Aquí puedes setear el usuario actualmente autenticado
   }
 }

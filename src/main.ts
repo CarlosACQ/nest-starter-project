@@ -4,6 +4,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import * as morgan from 'morgan';
 import { CORS } from './constant';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -17,7 +18,9 @@ async function bootstrap() {
     }),
   );
 
-  app.use(morgan('dev'));
+  app.use(helmet());
+  const morganFormat = process.env.NODE_ENV === 'production' ? 'combined' : 'dev';
+  app.use(morgan(morganFormat));
   app.enableCors(CORS);
   app.setGlobalPrefix('api');
 
